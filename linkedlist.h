@@ -3,51 +3,67 @@
 
 #include <stdint.h>
 
-#define LL_ERROR (-1)
-#define LL_OK    (0)
+#define LL_MALLOCFAIL (2)
+#define LL_ERROR      (1)
+#define LL_OK         (0)
 
-struct ll_buffer_t {
+typedef unsigned int uint;
+
+typedef struct ll_buffer {
     void*    data;
-    uint32_t len;
-};
+    size_t   len;
+} ll_buffer;
 
-struct ll_node_t {
-    struct ll_buffer_t buf;
-    struct ll_node_t*  next;
-    struct ll_node_t*  prev;
-};
+typedef struct ll_node {
+    ll_buffer        buf;
+    struct ll_node*  next;
+    struct ll_node*  prev;
+} ll_node;
 
-enum ll_print_mode {
-    DATA,
-    NODATA
-};
+typedef struct ll_list {
+    ll_node* head;
+} ll_list;
 
-int ll_create_empty(struct ll_node_t* node);
+typedef enum ll_print_mode {
+    LL_DATA,
+    LL_NODATA,
+    LL_REVERSE
+} ll_print_mode;
 
-struct ll_node_t* ll_add_first(struct ll_node_t* head, void* data, size_t size);
-void ll_add_last(struct ll_node_t* head, void* data, size_t size);
-struct ll_node_t* ll_insert(struct ll_node_t* head, void* data, size_t size, uint32_t index);
+// Allocate empty list
+ll_list* ll_create_empty();
 
-void ll_replace_first(struct ll_node_t* head, void* data, size_t size);
-void ll_replace_last(struct ll_node_t* head, void* data, size_t);
-void ll_replace_at(struct ll_node_t* head, void* data, size_t size, uint32_t index);
+// Append 
+void ll_add_first(ll_list* list, void* data, size_t size);
+void ll_add_last(ll_list* list, void* data, size_t size);
+void ll_insert(ll_list* list, void* data, size_t size, uint index);
 
-struct ll_node_t* ll_remove_first(struct ll_node_t* head);
-void ll_remove_last(struct ll_node_t* head);
-struct ll_node_t* ll_remove_at(struct ll_node_t* head, uint32_t index);
+// Replace
+void ll_replace_first(ll_list* list, void* data, size_t size);
+void ll_replace_last(ll_list* list, void* data, size_t size);
+void ll_replace_at(ll_list* list, void* data, size_t size, uint index);
 
-void ll_clear(struct ll_node_t* head);
+// Remove
+void ll_remove_first(ll_list* list);
+void ll_remove_last(ll_list* list);
+void ll_remove_at(ll_list* list, uint index);
 
-struct ll_node_t* ll_peek_first(struct ll_node_t* head);
-struct ll_node_t* ll_peek_last(struct ll_node_t* head);
-struct ll_node_t* ll_peek_at(struct ll_node_t* head, uint32_t index);
+// Clear entire list
+void ll_clear(ll_list* list);
 
-struct ll_node_t* ll_poll_first(struct ll_node_t* head);
-struct ll_node_t* ll_poll_last(struct ll_node_t* head);
-struct ll_node_t* ll_poll_at(struct ll_node_t* head);
+// Get 
+ll_node* ll_peek_first(ll_list* list);
+ll_node* ll_peek_last(ll_list* list);
+ll_node* ll_peek_at(ll_list* list, uint index);
 
-int ll_size(struct ll_node_t* head);
+// Get and delete 
+ll_node* ll_poll_first(ll_list* list);
+ll_node* ll_poll_last(ll_list* list);
+ll_node* ll_poll_at(ll_list* list, uint index);
 
-void ll_print(struct ll_node_t head, enum ll_print_mode mode);
+// Get size 
+uint ll_size(ll_list* list);
+
+void ll_print(ll_list* list, ll_print_mode mode);
 
 #endif
