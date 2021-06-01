@@ -24,15 +24,6 @@ static void ll_free(void* ptr, int line, const char* file) {
 
 #define PRINT_DATA_MAX (10)
 
-static const char* error_msgs[] = 
-    { "error", "failed to allocate node." };
-
-static const char* error_msg(int code) {
-    return error_msgs[code - 1];
-}
-
-#define ERROR(code) printf("Linked list error: %s\n", error_msg(code)); HANG
-
 static ll_node* create_node() {
     ll_node* node = (ll_node*)malloc(sizeof(ll_node));
     node->next = NULL;
